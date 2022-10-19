@@ -1,0 +1,39 @@
+from flask import Flask,render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template("login.html")
+
+if __name__=='__main__':
+    app.run(debug=True)
+    
+    
+  #  HTML
+  
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body style="background-color:powerblue;"
+</div>
+<form action="" method="post">
+    <label>USERNAME</label><br>
+    <input name="username" type="email" placeholder="write your username"><br><br>
+    <label>PASSWORD</label><br>
+    <input name="password" type="password" placeholder="write your password"><br><br>
+    <input type="submit" value="LOGIN"><br><br>
+</form>
+</div>
+</div>
+    <form action="/new">
+        <label>New Here?</label>
+        <input value="Registar" type="submit">
+        </form>
+</div>
+</body>
+</body>
+</html>
