@@ -1,0 +1,204 @@
+Challenges faced after coding- It is working for PDFs which have structured format, for unstructured PDFs modification requires. Code will process one document at a time.
+
+
+
+
+
+
+#import libraries
+import pdfplumber 
+import pandas as pd
+getting its data
+#uploading pdf and getting its data
+invoice_pdf = pdfplumber.open('C:/Users/hp/Desktop/Invoice2.pdf')
+print(invoice_pdf.pages[0].extract_text())
+
+#following is output of code above dont paste it in code while modifying
+Invoice
+Invoice Number INV-3337
+From:
+DEMO - Sliced Invoices Order Number 12345
+Suite 5A-1204 Invoice Date January 25, 2016
+123 Somewhere Street
+Due Date January 31, 2016
+Your City AZ 12345
+Total Due $93.50
+admin@slicedinvoices.com
+To:
+Test Business
+123 Somewhere St
+d
+Melbourne, VIC 3000
+test@test.com
+i
+Hrs/Qty Service Rate/Price Adjust Sub Total
+a
+Web Design
+1.00 $85.00 0.00% $85.00
+This is a sample description...
+P
+Sub Total $85.00
+Tax $8.50
+Total $93.50
+ANZ Bank
+ACC # 1234 1234
+BSB # 4321 432
+Payment is due within 30 days from date of invoice. Late payment is subject to fees of 5% per month.
+Thanks for choosing DEMO - Sliced Invoices | admin@slicedinvoices.com
+Page 1/1
+print(invoice_pdf.pages[0].extract_table())
+[['Invoice Number INV-3337\nFrom:\nDEMO - Sliced Invoices Order Number 12345\nSuite 5A-1204 Invoice Date January 25, 2016\n123 Somewhere Street\nDue Date January 31, 2016\nYour City AZ 12345\nTotal Due $93.50\nadmin@slicedinvoices.com\nTo:\nTest Business\n123 Somewhere St\nMelbourne, VIC 3000\ntest@test.com', None, None, None, None], ['Hrs/Qty', 'Service', 'd\nRate/Price', 'Adjust', 'Sub Total'], ['1.00', 'Web Design\nThis is a sample description...', 'i\n$85.00', '0.00%', '$85.00'], ['a\nP\nSub Total $85.00\nTax $8.50\nTotal $93.50\nANZ Bank\nACC # 1234 1234\nBSB # 4321 432', None, None, None, None]]
+#extract specific info
+for page in invoice_pdf.pages:
+    print(page.extract_text())
+​
+Invoice
+Invoice Number INV-3337
+From:
+DEMO - Sliced Invoices Order Number 12345
+Suite 5A-1204 Invoice Date January 25, 2016
+123 Somewhere Street
+Due Date January 31, 2016
+Your City AZ 12345
+Total Due $93.50
+admin@slicedinvoices.com
+To:
+Test Business
+123 Somewhere St
+d
+Melbourne, VIC 3000
+test@test.com
+i
+Hrs/Qty Service Rate/Price Adjust Sub Total
+a
+Web Design
+1.00 $85.00 0.00% $85.00
+This is a sample description...
+P
+Sub Total $85.00
+Tax $8.50
+Total $93.50
+ANZ Bank
+ACC # 1234 1234
+BSB # 4321 432
+Payment is due within 30 days from date of invoice. Late payment is subject to fees of 5% per month.
+Thanks for choosing DEMO - Sliced Invoices | admin@slicedinvoices.com
+Page 1/1
+#invoice number
+​
+def extract_datas(pdf_file):
+    invoice_pdf = pdfplumber.open(pdf_file)
+    
+    for page in invoice_pdf.pages:
+        for line in page.extract_text().splitlines():
+            if 'invoice number' in line.lower():
+                print(line)
+                #print(line.split()[-1])
+            
+            
+            
+extract_datas('C:/Users/hp/Desktop/Invoice2.pdf')
+
+#following is output of code above dont paste it in code while modifying
+Invoice Number INV-3337
+#Invoice Date
+​
+def extract_datas(pdf_file):
+    invoice_pdf = pdfplumber.open(pdf_file)
+    
+    invoice_no, invoice_date= '', ''
+    
+    for page in invoice_pdf.pages:
+        for line in page.extract_text().splitlines():
+            if 'invoice number' in line.lower():
+                invoice_no = line.split()[-1]
+            if 'invoice date' in line.lower():
+                invoice_date = line.split('Invoice date')[-1]
+                print(line.split('Invoice Date')[-1])
+                #print(line.split()[-1])
+​
+extract_datas('C:/Users/hp/Desktop/Invoice2.pdf')
+ #following is output of code above dont paste it in code while modifying
+ January 25, 2016
+#total due amount
+​
+def extract_datas(pdf_file):
+    invoice_pdf = pdfplumber.open(pdf_file)
+    
+    invoice_no, invoice_date= '', ''
+    
+    for page in invoice_pdf.pages:
+        for line in page.extract_text().splitlines():
+            if 'invoice number' in line.lower():
+                invoice_no = line.split()[-1]
+            if 'invoice date' in line.lower():
+                invoice_date = line.split('Invoice Date')[-1].split()
+            if 'total due' in line.lower():
+                due_amt = line.split()[-1]
+                print(line)
+                #print(line.split()[-1])
+​
+extract_datas('C:/Users/hp/Desktop/Invoice2.pdf')
+
+#following is output of code above dont paste it in code while modifying
+Total Due $93.50
+# tax amount
+​
+def extract_datas(pdf_file):
+    invoice_pdf = pdfplumber.open(pdf_file)
+    
+    invoice_no, invoice_date= '', ''
+    
+    for page in invoice_pdf.pages:
+        for line in page.extract_text().splitlines():
+            if 'invoice number' in line.lower():
+                invoice_no = line.split()[-1]
+            if 'invoice date' in line.lower():
+                invoice_date = line.split('Invoice Date')[-1].split()
+            if 'total due' in line.lower():
+                due_amt = line.split()[-1]
+            if 'tax' in line.lower():
+                tax_amt = line.split()[-1]
+                print(line)
+                #print(line.split()[-1])
+​
+extract_datas('C:/Users/hp/Desktop/Invoice2.pdf')
+
+#following is output of code above dont paste it in code while modifying
+Tax $8.50
+
+#output altogether
+def extract_datas(pdf_file):
+    invoice_pdf = pdfplumber.open(pdf_file)
+    
+    invoice_no, invoice_date, due_amt, tax_amt = '', '', '', ''
+    
+    for page in invoice_pdf.pages:
+        for line in page.extract_text().splitlines():
+            if 'invoice number' in line.lower():
+                invoice_no = line.split()[-1]
+            if 'invoice date' in line.lower():
+                invoice_date = line.split('invoice date')[-1].split()
+            if 'total due' in line.lower():
+                due_amt = line.split()[-1]
+            if 'tax' in line.lower():
+                tax_amt = line.split()[-1]
+                
+​
+                
+results = {
+    'invoice number': invoice_no,
+    'invoice date': invoice_date,
+    'total due': due_amt,
+    'tax': tax_amt,
+}
+return results
+​
+extract_datas('C:/Users/hp/Desktop/Invoice2.pdf')
+​
+# Getting output in excel file format
+data = pd.DataFrame({'invoice number': invoice_no, 'invoice date': invoice_date, 'total due': due_amt, 'tax': tax_amt})
+datatoexcel = pd.ExcelWriter("Template data export sheet.xlsx",engine='xlsxwriter')
+data.to_excel(datatoexcel, sheet_name = 'Sheet2')
+datatoexcel.save()
+​
